@@ -2,12 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
+use App\Http\Repository\ControllerRepository;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    public function index()
+    {
+        return view('welcome');
+    }
+
+
+    /**
+     * @param Request $request
+     */
+    public function addUser(Request $request)
+    {
+        $username = $request->get('username');
+        $email = $request->get('username');
+        $password = $request->get('password', 'password');
+        $exists = ControllerRepository::checkUser($username, $email);
+        if ($exists) {
+            echo "Username already exists";
+        } else {
+            ControllerRepository::createUser($username, $email, $password);
+        }
+    }
 }
